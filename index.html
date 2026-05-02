@@ -82,12 +82,12 @@ body::before {
 }
 .card.green .card-inner {
   background: linear-gradient(145deg, #34b86a 0%, #238a4e 55%, #1a6638 100%);
-  box-shadow: 0 0 0 2.5px #1a6638, 3px 3px 0 4px rgba(0,0,0,0.10),
+  box-shadow: 0 0 0 3.5px #1a6638, 3px 3px 0 4px rgba(0,0,0,0.10),
               0 12px 30px rgba(42,138,86,0.28);
 }
 .card.white .card-inner {
   background: var(--paper);
-  box-shadow: 0 0 0 2.5px var(--green), 3px 3px 0 4px rgba(0,0,0,0.08),
+  box-shadow: 0 0 0 3.5px var(--green), 3px 3px 0 4px rgba(0,0,0,0.08),
               0 10px 28px rgba(42,138,86,0.10);
 }
 .doodle-corner {
@@ -132,9 +132,9 @@ body::before {
 }
 .tile {
   background: var(--paper);
-  border: 2px solid var(--ink);
+  border: 3px solid var(--ink);
   border-radius: 10px;
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
   padding: 0.75rem 0.7rem 0.7rem;
   display: flex; flex-direction: column;
   align-items: center; gap: 0.25rem;
@@ -213,9 +213,9 @@ body::before {
 .quiz-opt {
   font-family:'Caveat',cursive; font-weight:600; font-size:1.05rem;
   color:var(--ink); background:var(--paper);
-  border:2px solid rgba(44,36,22,0.2); padding:0.8rem 1rem;
+  border: 2.5px solid rgba(44,36,22,0.35); padding:0.8rem 1rem;
   border-radius:8px; cursor:pointer; text-align:left;
-  box-shadow:2px 2px 0 rgba(44,36,22,0.10); transition:all 0.14s;
+  box-shadow: 3px 3px 0 rgba(44,36,22,0.18); transition:all 0.14s;
 }
 .quiz-opt:active { transform:translate(2px,2px); box-shadow:none; background:var(--green-pale); border-color:var(--green); }
 
@@ -227,7 +227,8 @@ body::before {
   display:flex; flex-direction:column; align-items:center; gap:0.7rem;
   width:100%; max-width:300px; box-shadow:4px 4px 0 var(--ink);
 }
-.result-emoji { font-size:3.5rem; }
+.result-illustration { width: 100%; max-width: 240px; height: 160px; margin-bottom: 0.2rem; border-radius: 8px; overflow: hidden; border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.result-emoji { font-size:2.5rem; }
 .result-badge { font-family:'Caveat',cursive; font-size:0.95rem; color:var(--gold); }
 .result-type {
   font-family:'Caveat',cursive; font-weight:700;
@@ -276,18 +277,18 @@ body::before {
 .cloud-input-row { display:flex; gap:0.5rem; width:100%; max-width:300px; }
 .cloud-input {
   flex:1; font-family:'Caveat',cursive; font-size:1.15rem; color:var(--ink);
-  border:2px solid rgba(44,36,22,0.2); background:var(--paper);
+  border: 2.5px solid rgba(44,36,22,0.35); background:var(--paper);
   padding:0.65rem 0.9rem; border-radius:6px; outline:none;
-  box-shadow:2px 2px 0 rgba(44,36,22,0.07); transition:border-color 0.2s;
+  box-shadow: 3px 3px 0 rgba(44,36,22,0.15); transition:border-color 0.2s;
 }
 .cloud-input:focus { border-color:var(--green); }
 .cloud-input::placeholder { color:rgba(44,36,22,0.3); font-style:italic; }
 .cloud-submit {
   font-family:'Caveat',cursive; font-weight:700; font-size:1rem;
   color:white; background:var(--green);
-  border:2px solid var(--green-dark); padding:0.65rem 1rem;
+  border: 3px solid var(--green-dark); padding:0.65rem 1rem;
   border-radius:6px; cursor:pointer;
-  box-shadow:2px 2px 0 var(--green-dark); transition:all 0.14s; white-space:nowrap;
+  box-shadow: 3px 3px 0 var(--green-dark); transition:all 0.14s; white-space:nowrap;
 }
 .cloud-submit:active { transform:translate(2px,2px); box-shadow:none; }
 .cloud-hint {
@@ -441,6 +442,7 @@ body::before {
     </div>
     <div class="quiz-result" id="quizResult">
       <div class="result-card">
+        <div class="result-illustration" id="rIllustration"></div>
         <div class="result-emoji" id="rEmoji"></div>
         <div class="result-badge">🌟 sei un alpaca...</div>
         <div class="result-type" id="rType"></div>
@@ -540,9 +542,9 @@ function goTo(i){
 // ── QUIZ ──
 const scores=[0,0,0];
 const results=[
-  {type:'Huacaya',emoji:'🤍',desc:'Soffice e sereno. Vivi nel presente, ami la quiete. La tua lana è la più morbida del bosco.'},
-  {type:'Suri',   emoji:'🌿',desc:'Fluente e libero. Sei curioso, sempre in movimento. La tua fibra brilla come seta al sole.'},
-  {type:'Cria',   emoji:'🌱',desc:'Piccolo ma vivace! Sei giovane dentro e porti gioia ovunque. Il bosco sorride quando arrivi.'},
+  {type:'Huacaya',emoji:'🤍',desc:'Soffice e sereno. Vivi nel presente, ami la quiete. La tua lana è la più morbida del Bosco.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Alpaca_%28Vicugna_pacos%29_2.jpg/320px-Alpaca_%28Vicugna_pacos%29_2.jpg'},
+  {type:'Suri',   emoji:'🌿',desc:'Fluente e libero. Sei curioso, sempre in movimento. La tua fibra brilla come seta al sole.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Suri_alpaca_%28Huacaya_in_background%29.jpg/320px-Suri_alpaca_%28Huacaya_in_background%29.jpg'},
+  {type:'Cria',   emoji:'🌱',desc:'Piccolo ma vivace! Sei giovane dentro e porti gioia ovunque. Il Bosco sorride quando arrivi.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Alpaca_cria.jpg/320px-Alpaca_cria.jpg'},
 ];
 function answer(q,c){
   scores[c]++;
@@ -554,6 +556,7 @@ function answer(q,c){
     document.getElementById('rEmoji').textContent=r.emoji;
     document.getElementById('rType').textContent=r.type;
     document.getElementById('rDesc').textContent=r.desc;
+    document.getElementById('rIllustration').innerHTML=`<img src="${r.img}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" alt="${r.type}">`;
     document.getElementById('quizResult').classList.add('show');
   }
 }
