@@ -1,167 +1,617 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Il Bosco dell'Angelo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
-      background: #f4fbf7;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between;
-      overflow: hidden;
-    }
+```
+:root {
+  --green:      #2a8a56;
+  --green-dark: #1b5e38;
+  --green-pale: #e8f7ee;
+  --cream:      #ffffff;
+  --paper:      #ffffff;
+  --ink:        #1a1a1a;
+  --gold:       #c4933a;
+  --rust:       #c4522a;
+}
 
-    body::before {
-      content: ''; position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(58,170,120,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 100% 100%, rgba(46,139,94,0.05) 0%, transparent 60%);
-      pointer-events: none;
-    }
+html, body {
+  height: 100%; min-height: 100%;
+  background: var(--cream);
+  display: flex; flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  font-family: 'Nunito', sans-serif;
+}
 
-    .header {
-      width: 100%; text-align: center; padding: 2rem 1rem 0;
-      z-index: 10; opacity: 0; transition: opacity 0.8s ease;
-    }
-    .header a { text-decoration: none; display: inline-block; }
-    .header h1 {
-      font-family: 'Cinzel', serif; font-weight: 400;
-      font-size: clamp(0.75rem, 3vw, 0.95rem);
-      letter-spacing: 0.28em; text-transform: uppercase;
-      color: #2e8b5e; line-height: 1.7;
-    }
-    .header-line {
-      display: flex; align-items: center; justify-content: center;
-      gap: 10px; margin: 0.5rem auto;
-    }
-    .header-line::before, .header-line::after {
-      content: ''; width: 40px; height: 1px; background: #3aaa78; opacity: 0.45;
-    }
-    .leaf-dot {
-      width: 6px; height: 6px; background: #3aaa78;
-      border-radius: 0 50% 0 50%; transform: rotate(45deg); opacity: 0.6;
-    }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
 
-    .scene {
-      flex: 1; display: flex; align-items: center;
-      justify-content: center; width: 100%;
-    }
+/* ══ SCREENS ══ */
+.screen {
+  display: none; flex-direction: column;
+  align-items: center; width: 100%;
+  min-height: 100dvh; position: relative; z-index: 1;
+  padding: 0 1.3rem 2rem;
+}
+.screen.active { display: flex; }
 
-    /* Single card — content swaps via JS */
-    .card {
-      width: 260px;
-      height: 170px;
-      border-radius: 8px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 1.5rem 1.8rem;
-      opacity: 0;
-    }
+/* ══ HEADER ══ */
+.site-header {
+  width: 100%; text-align: center;
+  padding: 1.2rem 0 0;
+  opacity: 0; transition: opacity 0.8s ease;
+}
+.site-header.visible { opacity: 1; }
+.site-header a { text-decoration: none; display: inline-flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+.site-header h1 {
+  font-family: 'Caveat', cursive; font-weight: 700;
+  font-size: clamp(1.8rem, 7vw, 2.3rem);
+  color: #1a1a1a; line-height: 1.1;
+}
+.header-sub {
+  font-family: 'Caveat', cursive; font-weight: 400;
+  font-size: 1rem; color: #8a6020;
+}
+.header-squiggle { margin-top: 0.2rem; }
 
-    .card.green {
-      background: linear-gradient(135deg, #3aaa78 0%, #2e8b5e 100%);
-      box-shadow: 0 10px 40px rgba(46,139,94,0.28), 0 2px 10px rgba(0,0,0,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .card.white {
-      background: #ffffff;
-      box-shadow: 0 10px 40px rgba(46,139,94,0.15), 0 2px 10px rgba(0,0,0,0.06);
-      border: 1px solid rgba(46,139,94,0.15);
-    }
+/* ══ SCREEN 1 — HOME ══ */
+#s1 { gap: 0.9rem; }
 
-    .card-eyebrow {
-      font-family: 'Cinzel', serif; font-size: 0.4rem;
-      letter-spacing: 0.28em; text-transform: uppercase;
-      color: #3aaa78; margin-bottom: 0.9rem; opacity: 0.8;
-    }
-    .card-message {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.9rem, 8vw, 2.7rem);
-      font-weight: 300; font-style: italic;
-      color: #1a3d2b; line-height: 1.2; text-align: center;
-    }
-    .card-rule {
-      width: 28px; height: 1px; background: #c8ead9; margin-top: 0.9rem;
-    }
+/* CARD — straight, no tilt */
+.card {
+  width: min(300px, 88vw);
+  opacity: 0;
+  position: relative;
+  margin-top: 0.9rem;
+}
+.card-inner {
+  border-radius: 10px;
+  position: relative;
+  padding: 1.3rem 1.5rem 1.2rem;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.3rem;
+}
+.card.green .card-inner {
+  background: linear-gradient(145deg, #34b86a 0%, #238a4e 55%, #1a6638 100%);
+  box-shadow: 0 0 0 2.5px #1a6638, 3px 3px 0 4px rgba(0,0,0,0.10),
+              0 12px 30px rgba(42,138,86,0.28);
+}
+.card.white .card-inner {
+  background: var(--paper);
+  box-shadow: 0 0 0 2.5px var(--green), 3px 3px 0 4px rgba(0,0,0,0.08),
+              0 10px 28px rgba(42,138,86,0.10);
+}
+.doodle-corner {
+  position: absolute; font-size: 0.95rem; opacity: 0.28; pointer-events: none;
+}
+.doodle-corner.tl { top:7px; left:9px; }
+.doodle-corner.tr { top:7px; right:9px; }
+.doodle-corner.bl { bottom:7px; left:9px; }
+.doodle-corner.br { bottom:7px; right:9px; }
 
-    .footer {
-      width: 100%; text-align: center; padding: 0 1rem 2rem;
-      z-index: 10; opacity: 0; transition: opacity 0.8s ease;
-    }
-    .footer a { display: inline-block; transition: opacity 0.2s; }
-    .footer a:active { opacity: 0.6; }
-    .logo-img { width: 72px; height: 72px; object-fit: contain; opacity: 0.85; }
+.green-season {
+  font-family: 'Caveat', cursive; font-weight: 500;
+  font-size: 1rem; color: rgba(255,255,255,0.9); z-index:1; font-weight:600;
+}
+.green-tagline {
+  font-family: 'Caveat', cursive; font-weight: 600;
+  font-size: 1.6rem; color: rgba(255,255,255,0.92); z-index:1; text-align:center;
+}
+.green-alpaca { font-size: 2.2rem; z-index:1; animation: gentleBob 3s ease-in-out infinite; }
+@keyframes gentleBob {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-7px) rotate(2deg); }
+}
+
+.card-greeting {
+  font-family:'Caveat',cursive; font-weight:700;
+  font-size: clamp(1.1rem, 4.5vw, 1.4rem); font-weight: 700; color: #1a1a1a;
+  color:var(--ink); line-height:1.1; text-align:center;
+}
+.card-from {
+  font-family:'Caveat',cursive; font-size:0.95rem;
+  color:var(--green-dark); opacity:1;
+}
+.hand-divider { margin: 0.3rem 0; opacity:0.45; }
+
+/* ══ TWO TILES ══ */
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  width: min(300px, 88vw);
+}
+.tile {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.75rem 0.7rem 0.7rem;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.25rem;
+  cursor: pointer; transition: all 0.14s;
+  text-align: center;
+}
+.tile:active { transform: translate(3px,3px); box-shadow: none; }
+.tile-icon { font-size: 1.6rem; line-height: 1; }
+.tile-label {
+  font-family: 'Caveat', cursive; font-weight: 700;
+  font-size: 0.95rem; color: #1a1a1a; font-weight: 700; line-height: 1.2;
+}
+.tile-sub {
+  font-family: 'Caveat', cursive; font-weight: 400;
+  font-size: 0.8rem; color: var(--green-dark); opacity: 1;
+}
+
+
+/* LOGO */
+.footer-links {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.55rem;
+  width: min(300px, 88vw);
+}
+.footer-link-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 100%; padding: 0.7rem 1rem;
+  font-family: 'Caveat', cursive; font-weight: 700; font-size: 1.05rem;
+  text-decoration: none; border-radius: 8px; transition: all 0.14s;
+}
+.footer-link-btn.ig {
+  color: white;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  border: 2px solid rgba(0,0,0,0.15);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+}
+.footer-link-btn.airbnb {
+  color: white;
+  background: #ff5a5f;
+  border: 2px solid #cc3a3f;
+  box-shadow: 2px 2px 0 #cc3a3f;
+}
+.footer-link-btn:active { transform: translate(2px,2px); box-shadow: none !important; }
+.home-footer {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.3rem;
+  opacity: 0; transition: opacity 0.9s ease;
+}
+.home-footer.visible { opacity: 1; }
+.logo-link { display: inline-block; transition: opacity 0.2s; }
+.logo-link:active { opacity: 0.6; }
+.logo-img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.08)); }
+
+/* ══ SCREEN 2 — QUIZ ══ */
+#s2 {}
+.quiz-wrap {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  width:100%; gap:1.1rem; padding:1.2rem 0;
+}
+.quiz-step { display:none; flex-direction:column; align-items:center; width:100%; gap:1rem; }
+.quiz-step.active { display:flex; animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+.quiz-alpaca { font-size:4.5rem; animation: gentleBob 2.5s ease-in-out infinite; }
+.quiz-counter {
+  font-family:'Caveat',cursive; font-size:1rem; color:var(--gold);
+  background:rgba(196,147,58,0.12); padding:0.2rem 0.8rem;
+  border-radius:20px; border:1.5px solid rgba(196,147,58,0.3);
+}
+.quiz-q {
+  font-family:'Caveat',cursive; font-weight:700;
+  font-size:clamp(1.5rem,7vw,2rem); color:var(--ink);
+  text-align:center; line-height:1.2; max-width:290px;
+}
+.quiz-options { display:flex; flex-direction:column; gap:0.6rem; width:100%; max-width:300px; }
+.quiz-opt {
+  font-family:'Caveat',cursive; font-weight:600; font-size:1.05rem;
+  color:var(--ink); background:var(--paper);
+  border:2px solid rgba(44,36,22,0.2); padding:0.8rem 1rem;
+  border-radius:8px; cursor:pointer; text-align:left;
+  box-shadow:2px 2px 0 rgba(44,36,22,0.10); transition:all 0.14s;
+}
+.quiz-opt:active { transform:translate(2px,2px); box-shadow:none; background:var(--green-pale); border-color:var(--green); }
+
+.quiz-result { display:none; flex-direction:column; align-items:center; width:100%; gap:1rem; }
+.quiz-result.show { display:flex; animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.result-card {
+  background:var(--paper); border:2.5px solid var(--ink);
+  border-radius:12px; padding:1.8rem 1.8rem 1.6rem;
+  display:flex; flex-direction:column; align-items:center; gap:0.7rem;
+  width:100%; max-width:300px; box-shadow:4px 4px 0 var(--ink);
+}
+.result-emoji { font-size:3.5rem; }
+.result-badge { font-family:'Caveat',cursive; font-size:0.95rem; color:var(--gold); }
+.result-type {
+  font-family:'Caveat',cursive; font-weight:700;
+  font-size:clamp(2rem,9vw,2.8rem); color:var(--green-dark); text-align:center;
+}
+.result-desc {
+  font-family:'Caveat',cursive; font-size:1.1rem; color:var(--ink);
+  text-align:center; line-height:1.5; max-width:260px; opacity:0.85;
+}
+.quiz-back-btn {
+  font-family:'Caveat',cursive; font-weight:600; font-size:1rem;
+  color:var(--green); background:none; border:none; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px;
+}
+
+/* ══ SCREEN 3 — GUESTBOOK ══ */
+#s3 {}
+.cloud-scene {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:1.1rem; padding:1rem 0; width:100%;
+}
+.cloud-title {
+  font-family:'Caveat',cursive; font-weight:700;
+  font-size:clamp(1.6rem,7vw,2rem); color:var(--ink);
+  text-align:center; line-height:1.2;
+}
+.cloud-sub {
+  font-family:'Caveat',cursive; font-size:0.95rem;
+  color:var(--gold); margin-top:0.2rem; text-align:center;
+}
+.cloud-canvas {
+  width:100%; max-width:320px; min-height:140px;
+  display:flex; flex-wrap:wrap; align-items:center;
+  justify-content:center; gap:0.3rem 0.6rem;
+  padding:1.1rem 1rem;
+  background:var(--paper);
+  border:2px dashed rgba(42,138,86,0.35);
+  border-radius:12px;
+}
+.cloud-word {
+  font-family:'Caveat',cursive; font-style:italic; line-height:1;
+  animation: wordPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes wordPop { from{opacity:0;transform:scale(0.3) rotate(-10deg);} to{opacity:1;transform:scale(1) rotate(0deg);} }
+.cloud-input-row { display:flex; gap:0.5rem; width:100%; max-width:300px; }
+.cloud-input {
+  flex:1; font-family:'Caveat',cursive; font-size:1.15rem; color:var(--ink);
+  border:2px solid rgba(44,36,22,0.2); background:var(--paper);
+  padding:0.65rem 0.9rem; border-radius:6px; outline:none;
+  box-shadow:2px 2px 0 rgba(44,36,22,0.07); transition:border-color 0.2s;
+}
+.cloud-input:focus { border-color:var(--green); }
+.cloud-input::placeholder { color:rgba(44,36,22,0.3); font-style:italic; }
+.cloud-submit {
+  font-family:'Caveat',cursive; font-weight:700; font-size:1rem;
+  color:white; background:var(--green);
+  border:2px solid var(--green-dark); padding:0.65rem 1rem;
+  border-radius:6px; cursor:pointer;
+  box-shadow:2px 2px 0 var(--green-dark); transition:all 0.14s; white-space:nowrap;
+}
+.cloud-submit:active { transform:translate(2px,2px); box-shadow:none; }
+.cloud-hint {
+  font-family:'Caveat',cursive; font-size:0.88rem;
+  color:var(--ink); opacity:0.4; text-align:center;
+}
+.cloud-thanks {
+  font-family:'Caveat',cursive; font-size:1.2rem;
+  color:var(--green); text-align:center; display:none;
+  animation: popIn 0.5s ease both;
+}
+
+/* ══ SHARED ══ */
+.back-link {
+  font-family:'Caveat',cursive; font-weight:600; font-size:1.05rem;
+  color:var(--green); background:none; border:none; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px; padding:0.3rem;
+}
+.sub-header {
+  width:100%; text-align:center; padding:1.6rem 0 0;
+}
+.sub-header h2 {
+  font-family:'Caveat',cursive; font-weight:700;
+  font-size:clamp(1.7rem,7vw,2.1rem); color:var(--green-dark);
+}
+.sub-header p {
+  font-family:'Caveat',cursive; font-size:0.95rem; color:var(--gold); margin-top:0.2rem;
+}
+.sub-squiggle { margin-top:0.2rem; }
+
+@keyframes popIn { from{opacity:0;transform:scale(0.8);} to{opacity:1;transform:scale(1);} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+
+.svg-filters { position:absolute; width:0; height:0; overflow:hidden; }
+```
+
   </style>
 </head>
 <body>
 
-<header class="header" id="hdr">
-  <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw">
-    <h1>Il Bosco<br>dell'Angelo</h1>
-  </a>
-  <div class="header-line"><div class="leaf-dot"></div></div>
-</header>
+<svg class="svg-filters" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="wobble" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="2" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
-<div class="scene">
-  <div class="card green" id="card"></div>
+<!-- ══ S1: HOME ══ -->
+
+<div class="screen active" id="s1">
+
+  <header class="site-header" id="hdr1">
+    <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw">
+      <h1>Il Bosco dell'Angelo</h1>
+      <div class="header-sub">🦙 alpaca farm · BnB · lana artigianale</div>
+      <svg class="header-squiggle" width="120" height="10" viewBox="0 0 120 10">
+        <path d="M2,6 Q15,1 30,6 Q45,11 60,6 Q75,1 90,6 Q105,11 118,6" fill="none" stroke="#2a8a56" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+      </svg>
+    </a>
+  </header>
+
+  <!-- CARD — straight -->
+
+  <div class="card green" id="card">
+    <div class="card-inner">
+      <div class="doodle-corner tl">🌿</div>
+      <div class="doodle-corner tr">✨</div>
+      <div class="doodle-corner bl">🍀</div>
+      <div class="doodle-corner br">🌸</div>
+      <div class="green-alpaca">🦙</div>
+      <div class="green-season" id="seasonLabel"></div>
+      <div class="green-tagline">alpaca farm & BnB</div>
+    </div>
+  </div>
+
+  <!-- TWO TILES side by side -->
+
+  <div class="tiles" id="tiles" style="opacity:0;transition:opacity 0.8s ease">
+    <div class="tile" onclick="goTo(1)">
+      <div class="tile-icon">🦙</div>
+      <div class="tile-label">Che alpaca sei?</div>
+      <div class="tile-sub">fai il quiz →</div>
+    </div>
+    <div class="tile" onclick="goTo(2)">
+      <div class="tile-icon">✍️</div>
+      <div class="tile-label">Lascia un segno</div>
+      <div class="tile-sub">bacheca →</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+
+  <div class="home-footer" id="s1footer">
+    <div class="footer-links">
+      <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw" class="footer-link-btn ig">
+        📸 Scoprici su Instagram
+      </a>
+      <a href="https://www.airbnb.co.uk/rooms/1417219097331691086?unique_share_id=5f17b7dc-6c02-45f7-89e3-d596110c53a9&viralityEntryPoint=1&s=76" class="footer-link-btn airbnb">
+        🏡 Prenota su Airbnb
+      </a>
+    </div>
+    <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw" class="logo-link">
+      <img class="logo-img" src="logo.png" alt="Il Bosco dell'Angelo">
+    </a>
+  </div>
+
 </div>
 
-<footer class="footer" id="ftr">
-  <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw">
-    <img class="logo-img" src="logo.png" alt="Il Bosco dell'Angelo">
-  </a>
-</footer>
+<!-- ══ S2: QUIZ ══ -->
+
+<div class="screen" id="s2">
+  <div class="sub-header">
+    <h2>Che alpaca sei? 🦙</h2>
+    <p>scoprilo in 3 domande</p>
+    <svg class="sub-squiggle" width="100" height="10" viewBox="0 0 100 10">
+      <path d="M2,6 Q12,1 25,6 Q38,11 50,6 Q62,1 75,6 Q88,11 98,6" fill="none" stroke="#c4933a" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-step active" id="q0">
+      <div class="quiz-alpaca">🦙</div>
+      <div class="quiz-counter">✏️ domanda 1 di 3</div>
+      <div class="quiz-q">Come ti svegli stamattina?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(0,0)">🌅 Piano piano, godendomi il silenzio</button>
+        <button class="quiz-opt" onclick="answer(0,1)">⚡ Subito sveglio, mille cose da fare!</button>
+        <button class="quiz-opt" onclick="answer(0,2)">🌿 Dipende dall'umore e dal tempo</button>
+      </div>
+    </div>
+    <div class="quiz-step" id="q1">
+      <div class="quiz-alpaca">🦙</div>
+      <div class="quiz-counter">✏️ domanda 2 di 3</div>
+      <div class="quiz-q">Cosa ti attira di più al Bosco?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(1,0)">🌲 La natura, la quiete, l'aria</button>
+        <button class="quiz-opt" onclick="answer(1,1)">🧶 La lana e l'artigianato</button>
+        <button class="quiz-opt" onclick="answer(1,2)">🦙 Gli alpaca — solo loro!</button>
+      </div>
+    </div>
+    <div class="quiz-step" id="q2">
+      <div class="quiz-alpaca">🦙</div>
+      <div class="quiz-counter">✏️ domanda 3 di 3</div>
+      <div class="quiz-q">Il tuo colore d'anima?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(2,0)">🤍 Bianco: puro, aperto, libero</button>
+        <button class="quiz-opt" onclick="answer(2,1)">🤎 Terra: caldo, solido, autentico</button>
+        <button class="quiz-opt" onclick="answer(2,2)">💚 Verde: vitale, curioso, selvaggio</button>
+      </div>
+    </div>
+    <div class="quiz-result" id="quizResult">
+      <div class="result-card">
+        <div class="result-emoji" id="rEmoji"></div>
+        <div class="result-badge">🌟 sei un alpaca...</div>
+        <div class="result-type" id="rType"></div>
+        <div class="result-desc" id="rDesc"></div>
+      </div>
+      <button class="quiz-back-btn" onclick="resetQuiz()">↩ riprova!</button>
+    </div>
+  </div>
+  <button class="back-link" onclick="goTo(0)">← torna al messaggio</button>
+</div>
+
+<!-- ══ S3: GUESTBOOK ══ -->
+
+<div class="screen" id="s3">
+  <div class="sub-header">
+    <h2>Lascia un segno ✍️</h2>
+    <p>una parola · rimane per sempre</p>
+    <svg class="sub-squiggle" width="100" height="10" viewBox="0 0 100 10">
+      <path d="M2,6 Q12,1 25,6 Q38,11 50,6 Q62,1 75,6 Q88,11 98,6" fill="none" stroke="#c4933a" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="cloud-scene">
+    <div class="cloud-canvas" id="cloudCanvas"></div>
+    <div class="cloud-input-row">
+      <input class="cloud-input" id="wordInput" placeholder="una parola…" maxlength="20">
+      <button class="cloud-submit" onclick="submitWord()">aggiungi ✏️</button>
+    </div>
+    <div class="cloud-hint">La tua parola si unisce a quelle di tutti gli ospiti 🦙</div>
+    <div class="cloud-thanks" id="cloudThanks">Grazie! La tua parola è nel bosco 🌲✨</div>
+  </div>
+  <button class="back-link" onclick="goTo(0)">← torna al messaggio</button>
+</div>
 
 <script>
-  const messages = ["Ciao", "Come stai?", "Stai bene!"];
-  const msg = messages[Math.floor(Math.random() * messages.length)];
-  const card = document.getElementById('card');
+// ── MESSAGES ──
+const messages = [
+  "Di me dicono che sono un taglia erba! È vero. Taglio le punte dell'erba e non la strappo. Si è creata una alleanza!!!",
+  "Sono il tuo amico arruffato. Vuoi che io mi fidi di te? Allora non essere invadente, fai silenzio, cerchiamo di percepire i nostri respiri, parliamoci con il cuore.",
+  "Mi presento: sono gentile, paziente, silenziosa, mi adatto facilmente, mi piace tanto stare con i miei simili in mezzo alla natura. Sono un'alpaca."
+];
+const greeting = messages[Math.floor(Math.random() * messages.length)];
 
-  function setStyle(el, styles) {
-    Object.assign(el.style, styles);
+// ── CARD FLIP ──
+const card = document.getElementById('card');
+function anim(el,kf,opts){ return el.animate(kf,{fill:'forwards',...opts}); }
+
+anim(card,[
+  {opacity:0, transform:'translateY(-24px) scale(0.9)'},
+  {opacity:1, transform:'translateY(3px) scale(1.01)'},
+  {opacity:1, transform:'translateY(0) scale(1)'}
+],{duration:700,delay:400,easing:'cubic-bezier(0.22,1,0.36,1)'});
+
+anim(card,[
+  {transform:'scaleX(1)'},{transform:'scaleX(0)'}
+],{duration:260,delay:1600,easing:'cubic-bezier(0.55,0,1,0.45)'});
+
+setTimeout(()=>{
+  card.className='card white';
+  card.innerHTML=`
+    <div class="card-inner">
+      <div class="doodle-corner tl">🌿</div>
+      <div class="doodle-corner tr">✨</div>
+      <div class="doodle-corner bl">🍀</div>
+      <div class="doodle-corner br">🌸</div>
+      <div class="card-greeting" id="cg"></div>
+      <svg width="80" height="8" viewBox="0 0 80 8" class="hand-divider">
+        <path d="M2,4 Q10,1 20,4 Q30,7 40,4 Q50,1 60,4 Q70,7 78,4" fill="none" stroke="#c4933a" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+      </svg>
+      <div class="card-from">— il Bosco dell'Angelo —</div>
+    </div>`;
+  anim(card,[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],
+    {duration:300,easing:'cubic-bezier(0,0.55,0.45,1)'});
+  setTimeout(()=>{
+    const el=document.getElementById('cg');
+    el.textContent=greeting;
+    anim(el,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],
+      {duration:450,easing:'ease-out'});
+  },200);
+},1860);
+
+setTimeout(()=>{
+  document.getElementById('hdr1').classList.add('visible');
+  document.getElementById('s1footer').classList.add('visible');
+  document.getElementById('tiles').style.opacity='1';
+},2600);
+
+// ── NAV ──
+let current=0;
+function goTo(i){
+  document.getElementById('s'+(current+1)).classList.remove('active');
+  current=i;
+  document.getElementById('s'+(current+1)).classList.add('active');
+  window.scrollTo(0,0);
+  if(i===2) renderCloud();
+}
+
+// ── QUIZ ──
+const scores=[0,0,0];
+const results=[
+  {type:'Huacaya',emoji:'🤍',desc:'Soffice e sereno. Vivi nel presente, ami la quiete. La tua lana è la più morbida del bosco.'},
+  {type:'Suri',   emoji:'🌿',desc:'Fluente e libero. Sei curioso, sempre in movimento. La tua fibra brilla come seta al sole.'},
+  {type:'Cria',   emoji:'🌱',desc:'Piccolo ma vivace! Sei giovane dentro e porti gioia ovunque. Il bosco sorride quando arrivi.'},
+];
+function answer(q,c){
+  scores[c]++;
+  document.getElementById('q'+q).classList.remove('active');
+  if(q<2){ document.getElementById('q'+(q+1)).classList.add('active'); }
+  else{
+    const top=scores.indexOf(Math.max(...scores));
+    const r=results[top];
+    document.getElementById('rEmoji').textContent=r.emoji;
+    document.getElementById('rType').textContent=r.type;
+    document.getElementById('rDesc').textContent=r.desc;
+    document.getElementById('quizResult').classList.add('show');
   }
+}
+function resetQuiz(){
+  scores.fill(0);
+  document.getElementById('quizResult').classList.remove('show');
+  document.querySelectorAll('.quiz-step').forEach((s,i)=>s.classList.toggle('active',i===0));
+}
 
-  // Step 1: drop card in (green side)
-  setTimeout(() => {
-    card.animate([
-      { opacity: 0, transform: 'translateY(-30px) scale(0.88)' },
-      { opacity: 1, transform: 'translateY(0) scale(1)' }
-    ], { duration: 600, fill: 'forwards', easing: 'cubic-bezier(0.22,1,0.36,1)' });
-  }, 400);
-
-  // Step 2: squish to nothing horizontally (like flipping edge-on)
-  setTimeout(() => {
-    card.animate([
-      { transform: 'scaleX(1)' },
-      { transform: 'scaleX(0)' }
-    ], { duration: 350, fill: 'forwards', easing: 'ease-in' });
-  }, 1400);
-
-  // Step 3: at the midpoint swap to white with message
-  setTimeout(() => {
-    card.className = 'card white';
-    card.innerHTML = `
-      <div class="card-eyebrow">il tuo messaggio</div>
-      <div class="card-message">${msg}</div>
-      <div class="card-rule"></div>
-    `;
-    // then expand back
-    card.animate([
-      { transform: 'scaleX(0)' },
-      { transform: 'scaleX(1)' }
-    ], { duration: 350, fill: 'forwards', easing: 'ease-out' });
-  }, 1750);
-
-  // Step 4: show header + footer
-  setTimeout(() => {
-    document.getElementById('hdr').style.opacity = '1';
-    document.getElementById('ftr').style.opacity = '1';
-  }, 2400);
+// ── WORD CLOUD ──
+const seed=[
+  {w:'pace',s:24},{w:'incantevole',s:16},{w:'casa',s:22},{w:'silenzio',s:15},
+  {w:'morbida',s:13},{w:'meraviglia',s:12},{w:'bosco',s:20},{w:'amore',s:26},
+  {w:'sereno',s:17},{w:'unico',s:11},{w:'soffice',s:14},{w:'felice',s:18},
+];
+const wColors=['#1b5e38','#2a8a56','#1a6638','#3db872','#c4933a','#c4522a'];
+function loadWords(){
+  let s=[];
+  try{s=JSON.parse(localStorage.getItem('bosco_words')||'[]');}catch(e){}
+  return [...seed,...s];
+}
+function saveWord(w){
+  let s=[];
+  try{s=JSON.parse(localStorage.getItem('bosco_words')||'[]');}catch(e){}
+  s.push({w,s:10+Math.floor(Math.random()*9)});
+  localStorage.setItem('bosco_words',JSON.stringify(s));
+}
+function renderCloud(){
+  const canvas=document.getElementById('cloudCanvas');
+  canvas.innerHTML='';
+  const words=loadWords().sort(()=>Math.random()-0.5);
+  const rots=[-4,-2,0,2,4,-3,3,-1,1];
+  words.forEach((wObj,i)=>{
+    const span=document.createElement('span');
+    span.className='cloud-word';
+    span.textContent=wObj.w;
+    span.style.fontSize=(wObj.s*0.072)+'rem';
+    span.style.color=wColors[i%wColors.length];
+    span.style.opacity=0.6+(wObj.s/65);
+    span.style.fontWeight=wObj.s>18?'700':'500';
+    span.style.transform=`rotate(${rots[i%rots.length]}deg)`;
+    span.style.animationDelay=(i*0.04)+'s';
+    canvas.appendChild(span);
+  });
+}
+function submitWord(){
+  const input=document.getElementById('wordInput');
+  const word=input.value.trim().toLowerCase().replace(/[^a-zàèéìòùäöü]/gi,'').slice(0,20);
+  if(!word)return;
+  saveWord(word);
+  input.value='';
+  renderCloud();
+  const t=document.getElementById('cloudThanks');
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3000);
+}
+document.getElementById('wordInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitWord();});
+renderCloud();
 </script>
+
 </body>
 </html>
