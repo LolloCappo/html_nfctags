@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fertilizzante in Giardino — Il Bosco dell'Angelo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #2a8a56;
+      --green-dark: #1b5e38;
+      --green-pale: #e8f7ee;
+      --cream:      #ffffff;
+      --paper:      #ffffff;
+      --ink:        #1a1a1a;
+      --gold:       #c4933a;
+      --rust:       #c4522a;
+    }
+
+    html, body {
+      height: 100%; min-height: 100%;
+      background: var(--cream);
+      display: flex; flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    .page {
+      display: flex; flex-direction: column;
+      align-items: center; width: 100%;
+      min-height: 100dvh; position: relative; z-index: 1;
+      padding: 0 1.3rem 2rem; gap: 0.9rem;
+    }
+
+    /* ══ HEADER ══ */
+    .site-header {
+      width: 100%; text-align: center;
+      padding: 1.2rem 0 0;
+      opacity: 0; animation: fadeIn 0.8s ease 0.3s forwards;
+    }
+    .site-header a { text-decoration: none; display: inline-flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+    .site-header h1 {
+      font-family: 'Caveat', cursive; font-weight: 700;
+      font-size: clamp(1.8rem, 7vw, 2.3rem);
+      color: #1a1a1a; line-height: 1.1;
+    }
+    .header-sub {
+      font-family: 'Caveat', cursive; font-weight: 700;
+      font-size: 1rem; color: #5a3e10;
+    }
+    .header-squiggle { margin-top: 0.2rem; }
+
+    /* ══ CARD ══ */
+    .card {
+      width: min(300px, 88vw);
+      position: relative;
+      margin-top: 0.9rem;
+      opacity: 0; animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.6s forwards;
+    }
+    .card-inner {
+      border-radius: 10px;
+      position: relative;
+      padding: 1.6rem 1.5rem 1.5rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.5rem;
+      background: var(--paper);
+      box-shadow: 0 0 0 3.5px var(--green), 3px 3px 0 4px rgba(0,0,0,0.08),
+                  0 10px 28px rgba(42,138,86,0.10);
+    }
+    .doodle-corner {
+      position: absolute; font-size: 0.95rem; opacity: 0.28; pointer-events: none;
+    }
+    .doodle-corner.tl { top:7px; left:9px; }
+    .doodle-corner.tr { top:7px; right:9px; }
+    .doodle-corner.bl { bottom:7px; left:9px; }
+    .doodle-corner.br { bottom:7px; right:9px; }
+
+    .card-icon { font-size: 2.4rem; line-height: 1; }
+    .card-title {
+      font-family: 'Caveat', cursive; font-weight: 700;
+      font-size: clamp(1.4rem, 6vw, 1.7rem);
+      color: var(--green-dark); text-align: center; line-height: 1.2;
+    }
+    .hand-divider { margin: 0.2rem 0; opacity: 0.45; }
+    .card-body {
+      font-family: 'Caveat', cursive; font-size: 1.05rem;
+      color: var(--ink); text-align: center; line-height: 1.6;
+      opacity: 0.85;
+    }
+    .card-from {
+      font-family: 'Caveat', cursive; font-size: 0.95rem;
+      color: var(--green-dark); margin-top: 0.3rem;
+    }
+
+    /* ══ FOOTER ══ */
+    .home-footer {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.3rem;
+      margin-top: auto; padding-top: 1rem;
+      opacity: 0; animation: fadeIn 0.9s ease 1s forwards;
+    }
+    .footer-links {
+      display: flex; flex-direction: row;
+      align-items: center; gap: 0.55rem;
+      width: min(300px, 88vw);
+    }
+    .footer-link-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.7rem 1rem;
+      font-family: 'Caveat', cursive; font-weight: 700; font-size: 1.05rem;
+      text-decoration: none; border-radius: 8px; transition: all 0.14s;
+    }
+    .footer-link-btn.ig {
+      color: white;
+      background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      border: 2px solid rgba(0,0,0,0.15);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    }
+    .footer-link-btn.airbnb {
+      color: white;
+      background: #ff5a5f;
+      border: 2px solid #cc3a3f;
+      box-shadow: 2px 2px 0 #cc3a3f;
+    }
+    .footer-link-btn:active { transform: translate(2px,2px); box-shadow: none !important; }
+    .logo-link { display: inline-block; transition: opacity 0.2s; }
+    .logo-link:active { opacity: 0.6; }
+    .logo-img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.08)); }
+
+    @keyframes popIn { from{opacity:0;transform:scale(0.85);} to{opacity:1;transform:scale(1);} }
+    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="site-header">
+    <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw">
+      <h1>Il Bosco dell'Angelo</h1>
+      <div class="header-sub">🦙 alpaca farm · BnB · lana artigianale</div>
+      <svg class="header-squiggle" width="120" height="10" viewBox="0 0 120 10">
+        <path d="M2,6 Q15,1 30,6 Q45,11 60,6 Q75,1 90,6 Q105,11 118,6" fill="none" stroke="#2a8a56" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+      </svg>
+    </a>
+  </header>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="doodle-corner tl">🌿</div>
+      <div class="doodle-corner tr">✨</div>
+      <div class="doodle-corner bl">🍀</div>
+      <div class="doodle-corner br">🌸</div>
+      <div class="card-icon">🌱💩</div>
+      <div class="card-title">Come usare il fertilizzante</div>
+      <svg width="80" height="8" viewBox="0 0 80 8" class="hand-divider">
+        <path d="M2,4 Q10,1 20,4 Q30,7 40,4 Q50,1 60,4 Q70,7 78,4" fill="none" stroke="#c4933a" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+      </svg>
+      <div class="card-body">
+        [Le istruzioni su come usare il fertilizzante in giardino verranno inserite qui.]
+      </div>
+      <div class="card-from">— il Bosco dell'Angelo —</div>
+    </div>
+  </div>
+
+  <div class="home-footer">
+    <div class="footer-links">
+      <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw" class="footer-link-btn ig">
+        📸 Scoprici su Instagram
+      </a>
+      <a href="https://www.airbnb.co.uk/rooms/1417219097331691086?unique_share_id=5f17b7dc-6c02-45f7-89e3-d596110c53a9&viralityEntryPoint=1&s=76" class="footer-link-btn airbnb">
+        🏡 Prenota su Airbnb
+      </a>
+    </div>
+    <a href="https://www.instagram.com/boscodellangelo?igsh=ZGlqdDZ0dWFkN3dw" class="logo-link">
+      <img class="logo-img" src="logo.png" alt="Il Bosco dell'Angelo">
+    </a>
+  </div>
+
+</div>
+
+</body>
+</html>

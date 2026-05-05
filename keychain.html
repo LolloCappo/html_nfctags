@@ -227,7 +227,6 @@ body::before {
   display:flex; flex-direction:column; align-items:center; gap:0.7rem;
   width:100%; max-width:300px; box-shadow:4px 4px 0 var(--ink);
 }
-.result-illustration { width: 100%; max-width: 240px; height: 160px; margin-bottom: 0.2rem; border-radius: 8px; overflow: hidden; border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
 .result-emoji { font-size:2.5rem; }
 .result-badge { font-family:'Caveat',cursive; font-size:0.95rem; color:var(--gold); }
 .result-type {
@@ -442,7 +441,6 @@ body::before {
     </div>
     <div class="quiz-result" id="quizResult">
       <div class="result-card">
-        <div class="result-illustration" id="rIllustration"></div>
         <div class="result-emoji" id="rEmoji"></div>
         <div class="result-badge">🌟 sei un alpaca...</div>
         <div class="result-type" id="rType"></div>
@@ -479,9 +477,17 @@ body::before {
 <script>
 // ── MESSAGES ──
 const messages = [
-  "Di me dicono che sono un taglia erba! È vero. Taglio le punte dell'erba e non la strappo. Si è creata una alleanza!!!",
-  "Sono il tuo amico arruffato. Vuoi che io mi fidi di te? Allora non essere invadente, fai silenzio, cerchiamo di percepire i nostri respiri, parliamoci con il cuore.",
-  "Mi presento: sono gentile, paziente, silenziosa, mi adatto facilmente, mi piace tanto stare con i miei simili in mezzo alla natura. Sono un'alpaca."
+  "Ciao. Di me dicono che sono un taglia erba! È vero. Taglio le punte dell'erba e non la strappo. Si è creata una alleanza!!!",
+  "Ciao. Sono il tuo amico arruffato. Vuoi che io mi fidi di te? Allora non essere invadente, fai silenzio, cerchiamo di percepire i nostri respiri, parliamoci con il cuore.",
+  "Ciao. Mi presento: sono gentile, paziente, silenziosa, mi adatto facilmente, mi piace tanto stare con i miei simili in mezzo alla natura. Sono un'alpaca.",
+  "L'alpaca non si cura dell'altezza della montagna o della rarità dell'ossigeno; essa cammina con passo fermo su ciò che può calpestare. Allo stesso modo, non affannarti per le tempeste del destino, ma cura solo la fermezza del tuo passo.",
+  "Ehi tu, umano... fermati un attimo e respira. Ricorda che non serve correre per arrivare lontano. Cerca il tuo gregge e cammina con passo leggero. Il mondo è un posto più bello se lo guardi con curiosità e calma.",
+  "La mia gentilezza è proverbiale! Per mia natura non sono né un prevaricatore e né aggressivo. Cerco in me la pazienza.",
+  "Mi piace il mondo che mi circonda, lo vivo con curiosità e lo voglio preservare. Guarda le mie zampe: ho cuscinetti morbidi che non calpestano l'erba, ma la accarezzano. Cerca di passare nel mondo senza distruggere ciò che ti circonda; la gentilezza verso la terra torna sempre indietro.",
+  "Ehi amico! Vorrei che tu non ti sentissi solo. Io lo so che quando restiamo soli si è vulnerabili. Cerca anche tu il tuo gregge. Coltiva le tue amicizie e la tua famiglia: la vita è più bella quando hai qualcuno a cui ronzare vicino.",
+  "Essere paziente e gentile non significa essere sciocco! A noi alpaca piace stabilire in modo chiaro i confini. Non amiamo che qualcuno invada i nostri spazi o superi il limite. Se è necessario sputiamo!",
+  "Le novità mi incuriosiscono, le studio con calma e senza fretta. I miei movimenti sono lenti. Il mio verso assomiglia a quello che voi umani emettete come tecnica di meditazione. Saranno questi i motivi per cui dicono che infondo un senso di pace?",
+  "Amico mio, se tu sapessi quanto sono vecchio e quanti mondi ho visto! Il trucco della mia sopravvivenza? Mi sono sempre adattato con pazienza e sfruttando al meglio le risorse naturali di cui disponevo. Potresti provare anche tu ad usare le risorse che hai in te per trasformare le sfide nel tuo habitat naturale.",
 ];
 const greeting = messages[Math.floor(Math.random() * messages.length)];
 
@@ -542,9 +548,9 @@ function goTo(i){
 // ── QUIZ ──
 const scores=[0,0,0];
 const results=[
-  {type:'Huacaya',emoji:'🤍',desc:'Soffice e sereno. Vivi nel presente, ami la quiete. La tua lana è la più morbida del Bosco.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Alpaca_%28Vicugna_pacos%29_2.jpg/320px-Alpaca_%28Vicugna_pacos%29_2.jpg'},
-  {type:'Suri',   emoji:'🌿',desc:'Fluente e libero. Sei curioso, sempre in movimento. La tua fibra brilla come seta al sole.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Suri_alpaca_%28Huacaya_in_background%29.jpg/320px-Suri_alpaca_%28Huacaya_in_background%29.jpg'},
-  {type:'Cria',   emoji:'🌱',desc:'Piccolo ma vivace! Sei giovane dentro e porti gioia ovunque. Il Bosco sorride quando arrivi.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Alpaca_cria.jpg/320px-Alpaca_cria.jpg'},
+  {type:'Huacaya',emoji:'🤍',desc:'Soffice e sereno. Vivi nel presente, ami la quiete. La tua lana è la più morbida del Bosco.'},
+  {type:'Suri',   emoji:'🌿',desc:'Fluente e libero. Sei curioso, sempre in movimento. La tua fibra brilla come seta al sole.'},
+  {type:'Cria',   emoji:'🌱',desc:'Piccolo ma vivace! Sei giovane dentro e porti gioia ovunque. Il Bosco sorride quando arrivi.'},
 ];
 function answer(q,c){
   scores[c]++;
@@ -556,7 +562,6 @@ function answer(q,c){
     document.getElementById('rEmoji').textContent=r.emoji;
     document.getElementById('rType').textContent=r.type;
     document.getElementById('rDesc').textContent=r.desc;
-    document.getElementById('rIllustration').innerHTML=`<img src="${r.img}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" alt="${r.type}">`;
     document.getElementById('quizResult').classList.add('show');
   }
 }
